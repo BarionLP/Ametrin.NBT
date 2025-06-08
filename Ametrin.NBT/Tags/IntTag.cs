@@ -1,7 +1,7 @@
 namespace Ametrin.NBT.Tags;
 
-public sealed class IntTag(int value) : Tag
+public sealed class IntTag(string name, int value) : Tag(name)
 {
-    public int Value { get; } = value;
+    public int Value { get; set; } = value;
     public override string ToString() => Value.ToString();
 }

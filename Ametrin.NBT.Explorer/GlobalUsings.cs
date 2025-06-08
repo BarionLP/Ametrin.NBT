@@ -1,0 +1,9 @@
+﻿global using Ametrin.NBT.Tags;
+global using Ametrin.NBT;
+global using Ametrin.Optional;
+global using System;
+global using System.Collections.Generic;
+global using System.Collections.Frozen;
+global using System.Collections.Immutable;
+global using System.Linq;
+global using System.Windows;

@@ -1,8 +1,8 @@
 namespace Ametrin.NBT.Tags;
 
-public sealed class StringTag(string value) : Tag
+public sealed class StringTag(string name, string value) : Tag(name)
 {
-    public string Value { get; } = value;
+    public string Value { get; set; } = value;
 
     public override string ToString() => Value;
 }

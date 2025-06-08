@@ -1,13 +1,5 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using Ametrin.NBT.Tags;
+using Microsoft.Win32;
 
 namespace Ametrin.NBT.Explorer;
 
@@ -18,6 +10,33 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
+
         InitializeComponent();
+
+        Loaded += (sender, args) =>
+        {
+            NbtViewer.ItemsSource = (ImmutableArray<string>)["Please open a file"];
+        };
+    }
+
+
+    private void FileOpen_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            ValidateNames = true,
+            CheckFileExists = true,
+            Multiselect = false,
+        };
+
+        if(dialog.ShowDialog() is not true)
+        {
+            return;
+        }
+
+        using var reader = NbtReader.CreateFromFile(dialog.FileName);
+
+        var tag = reader.ReadTag();
+        NbtViewer.ItemsSource = (ImmutableArray<Tag>) [tag];
     }
 }

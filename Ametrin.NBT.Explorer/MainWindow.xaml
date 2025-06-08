@@ -4,9 +4,45 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ametrin.NBT.Explorer"
+        xmlns:tags="clr-namespace:Ametrin.NBT.Tags;assembly=Ametrin.NBT"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
-    <Grid>
+        Title="Ametrin NBT Explorer" Height="720" Width="1280">
+    <Window.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type tags:CompoundTag}" ItemsSource="{Binding Values}">
+            <Label Content="{Binding Name}"/>
+        </HierarchicalDataTemplate>
 
+        <HierarchicalDataTemplate DataType="{x:Type tags:ListTag}" ItemsSource="{Binding Value}">
+            <Label Content="{Binding Name}"/>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="{x:Type tags:IntArrayTag}" ItemsSource="{Binding Value}">
+            <Label Content="{Binding Name}"/>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="{x:Type tags:LongArrayTag}" ItemsSource="{Binding Value}">
+            <Label Content="{Binding Name}"/>
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type tags:Tag}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Name}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Value}" Margin="4 0 0 0"/>
+            </StackPanel>        
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Click="FileOpen_Click"/>
+                <MenuItem Header="Save" IsEnabled="False"/>
+            </MenuItem>
+        </Menu>
+        <TreeView x:Name="NbtViewer" Grid.Row="1" Margin="4" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"/>
     </Grid>
 </Window>

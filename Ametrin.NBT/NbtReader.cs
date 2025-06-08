@@ -13,23 +13,23 @@ public sealed class NbtReader(Stream stream, bool leaveOpen = false) : IDisposab
     {
         var type = _reader.ReadByte();
         var name = ReadString();
-        return ReadTag((TagType)type);
+        return ReadTag((TagType)type, name);
     }
 
-    private Tag ReadTag(TagType type) => type switch
+    private Tag ReadTag(TagType type, string name) => type switch
     {
-        TagType.Byte => new SbyteTag(_reader.ReadSByte()),
-        TagType.Short => new ShortTag(ReadInt16BigEndian()),
-        TagType.Int => new IntTag(ReadInt32BigEndian()),
-        TagType.Long => new LongTag(ReadInt64BigEndian()),
-        TagType.Float => new FloatTag(ReadSingleBigEndian()),
-        TagType.Double => new DoubleTag(ReadDoubleBigEndian()),
-        TagType.ByteArray => new ByteArrayTag(_reader.ReadBytes(ReadInt32BigEndian())),
-        TagType.String => new StringTag(ReadString()),
-        TagType.List => ReadList(),
-        TagType.Compound => new CompoundTag(ReadCompound()),
-        TagType.IntArray => new IntArrayTag(ReadArray(ReadInt32BigEndian)),
-        TagType.LongArray => new LongArrayTag(ReadArray(ReadInt64BigEndian)),
+        TagType.Byte => new SbyteTag(name, _reader.ReadSByte()),
+        TagType.Short => new ShortTag(name, ReadInt16BigEndian()),
+        TagType.Int => new IntTag(name, ReadInt32BigEndian()),
+        TagType.Long => new LongTag(name, ReadInt64BigEndian()),
+        TagType.Float => new FloatTag(name, ReadSingleBigEndian()),
+        TagType.Double => new DoubleTag(name, ReadDoubleBigEndian()),
+        TagType.ByteArray => new ByteArrayTag(name, _reader.ReadBytes(ReadInt32BigEndian())),
+        TagType.String => new StringTag(name, ReadString()),
+        TagType.List => ReadList(name),
+        TagType.Compound => new CompoundTag(name, ReadCompound()),
+        TagType.IntArray => new IntArrayTag(name, ReadArray(ReadInt32BigEndian)),
+        TagType.LongArray => new LongArrayTag(name, ReadArray(ReadInt64BigEndian)),
         _ => throw new NotSupportedException($"Unkown tag type {type}"),
     };
 
@@ -52,21 +52,21 @@ public sealed class NbtReader(Stream stream, bool leaveOpen = false) : IDisposab
             var elementType = (TagType)_reader.ReadByte();
             if (elementType is TagType.End) break;
             var elementName = ReadString();
-            result[elementName] = ReadTag(elementType);
+            result[elementName] = ReadTag(elementType, elementName);
         }
         return result;
     }
     
-    private ListTag ReadList()
+    private ListTag ReadList(string name)
     {
         var elementType = (TagType)_reader.ReadByte();
         var count = ReadInt32BigEndian();
         var result = new List<Tag>(count);
         for (var i = 0; i < count; i++)
         {
-            result.Add(ReadTag(elementType));
+            result.Add(ReadTag(elementType, ""));
         }
-        return new(elementType, result);
+        return new(name, elementType, result);
     }
 
     private string ReadString()
