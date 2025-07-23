@@ -5,7 +5,7 @@ using Ametrin.NBT.Tags;
 
 namespace Ametrin.NBT;
 
-public sealed class NbtReader(Stream stream, bool leaveOpen = false) : IDisposable
+public sealed class NbtReader(Stream stream, bool leaveOpen = true) : IDisposable
 {
     private readonly BinaryReader _reader = new(stream, Encoding.UTF8, leaveOpen: leaveOpen);
 
@@ -56,7 +56,7 @@ public sealed class NbtReader(Stream stream, bool leaveOpen = false) : IDisposab
         }
         return result;
     }
-    
+
     private ListTag ReadList(string name)
     {
         var elementType = (TagType)_reader.ReadByte();

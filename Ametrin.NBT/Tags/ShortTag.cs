@@ -1,6 +1,6 @@
 namespace Ametrin.NBT.Tags;
 
-public sealed class ShortTag(string name, short value) : Tag(name)
+public sealed class ShortTag(string name, short value) : Tag(name, TagType.Short)
 {
     public short Value { get; set; } = value;
 
