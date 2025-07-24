@@ -40,7 +40,7 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open" Click="FileOpen_Click"/>
-                <MenuItem Header="Save" IsEnabled="False"/>
+                <MenuItem Header="Save" Click="FileSave_Click"/>
             </MenuItem>
         </Menu>
         <TreeView x:Name="NbtViewer" Grid.Row="1" Margin="4" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"/>

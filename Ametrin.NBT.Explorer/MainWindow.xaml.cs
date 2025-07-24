@@ -1,4 +1,4 @@
-﻿using Ametrin.NBT.Tags;
+﻿using System.IO;
 using Microsoft.Win32;
 
 namespace Ametrin.NBT.Explorer;
@@ -8,6 +8,8 @@ namespace Ametrin.NBT.Explorer;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private Tag? tag;
+
     public MainWindow()
     {
 
@@ -36,7 +38,27 @@ public partial class MainWindow : Window
 
         using var reader = NbtReader.CreateFromFile(dialog.FileName);
 
-        var tag = reader.ReadTag();
+        tag = reader.ReadTag();
         NbtViewer.ItemsSource = (ImmutableArray<Tag>) [tag];
+    }
+
+    private void FileSave_Click(object sender, RoutedEventArgs e)
+    {
+        if (tag is null) return;
+
+        var dialog = new SaveFileDialog
+        {
+            ValidateNames = true,
+        };
+
+        if (dialog.ShowDialog() is not true)
+        {
+            return;
+        }
+
+        using var stream = File.Create(dialog.FileName);
+        using var writer = NbtWriter.CreateCompressed(stream);
+
+        writer.WriteTag(tag);
     }
 }
