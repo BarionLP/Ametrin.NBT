@@ -58,7 +58,7 @@ public sealed class NbtWriter(Stream stream, bool leaveOpen = true) : IDisposabl
                 WriteArray(tag.Value, WriteInt64BigEndian);
                 break;
             default:
-                throw new NotSupportedException($"Unkown tag type {root}");
+                throw new NotSupportedException($"Unknown tag type {root}");
         }
 
     }
